@@ -1,3 +1,3 @@
 # AdventOfCode 2021
 
-A description of this package.
+My solutions for the Advent of Code 2021 written in Swift
