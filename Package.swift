@@ -18,10 +18,18 @@ let package = Package(
         .target(
             name: "AdventOfCode2021",
             dependencies: [
-                .product(name: "Parsing", package: "swift-parsing")
+                .product(name: "Parsing", package: "swift-parsing"),
+                .target(name: "AdventOfCode2021Library")
             ]),
+        .target(name: "AdventOfCode2021Library",
+                dependencies: [
+                    .product(name: "Parsing", package: "swift-parsing")
+                ],
+                resources: [
+                    .process("Inputs")
+                ]),
         .testTarget(
             name: "AdventOfCode2021Tests",
-            dependencies: ["AdventOfCode2021"]),
+            dependencies: ["AdventOfCode2021", "AdventOfCode2021Library"]),
     ]
 )
