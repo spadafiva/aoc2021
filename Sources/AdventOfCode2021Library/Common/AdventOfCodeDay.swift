@@ -22,13 +22,16 @@ public protocol AdventOfCodeDay {
     associatedtype Configuration: DayConfiguration
 
     static var parser: DayInputParser { get }
+    static var separator: String { get }
 
     static func result(inputs: [DayInput], configuration: Configuration) throws -> String
 }
 
 extension AdventOfCodeDay {
-    static func valuesFor(rawString: String) throws -> [DayInput] {
-        let lineParser = Many(Self.parser, separator: "\n")
+    public static var separator: String { "\n" }
+
+    public static func valuesFor(rawString: String) throws -> [DayInput] {
+        let lineParser = Many(Self.parser, separator: separator)
 
         guard let result = lineParser.parse(Substring(rawString)).output else {
             throw ParsingError.cannotParse(rawString)
@@ -72,15 +75,9 @@ public extension AdventOfCodeDay {
     }
 }
 
-public struct NoConfiguration: DayConfiguration {
-    public static var part1: NoConfiguration { NoConfiguration() }
-    public static var part2: NoConfiguration { NoConfiguration() }
-}
-
-public extension AdventOfCodeDay where Configuration == NoConfiguration {
-    static func run(with inputSource: AdventOfCodeInputSource<DayInput>) throws -> String {
-        return try run(configuration: NoConfiguration(), with: inputSource)
-    }
+public enum PartOnlyConfiguration: DayConfiguration {
+    case part1
+    case part2
 }
 
 public enum AdventOfCodeInputSource<T> {
