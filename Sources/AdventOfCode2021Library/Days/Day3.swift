@@ -11,21 +11,19 @@ public struct Day3: AdventOfCodeDay {
         }
     }
 
+    struct RowStatus {
+        var zeros: Int = 0
+        var ones: Int = 0
+
+        var isEqual: Bool { zeros == ones }
+        var hasMoreOnes: Bool { ones > zeros }
+        var hasMoreZeros: Bool { zeros < ones }
+    }
+
     static func part1(inputs: [DayInput], configuration: PartOnlyConfiguration) throws -> String {
-        var positions: [Int: Int] = [:]
-
-        for row in inputs {
-            for (index, digit) in row.enumerated() {
-                guard digit == "1" else { continue }
-                let newCount = positions[index].map { $0 + 1 } ?? 1
-                positions[index] = newCount
-            }
-        }
-
-        let orderedPositions = positions.sorted(by: { $0.key < $1.key })
-        let gammaBinary = calculateGamma(from: orderedPositions, inputCount: inputs.count)
-        let epsilonBinary = calculateEpsilon(from: orderedPositions, inputCount: inputs.count)
-
+        let rowStatuses = createRowStatuses(from: inputs)
+        let gammaBinary = rowStatuses.map { $0.zeros > $0.ones ? "0" : "1" }.joined()
+        let epsilonBinary = rowStatuses.map { $0.zeros < $0.ones ? "0" : "1" }.joined()
 
         guard let gamma = Int(gammaBinary, radix: 2), let epsilon = Int(epsilonBinary, radix: 2) else {
             struct InvalidBinaryStringsError: Error {}
@@ -36,15 +34,63 @@ public struct Day3: AdventOfCodeDay {
     }
 
     static func part2(inputs: [DayInput], configuration: PartOnlyConfiguration) throws -> String {
-        return "fail"
+        let oxygenBinary = searchForValidEvents(from: inputs, currentPosition: 0, matches: { input, rowStatus, currentPosition in
+            let value = stringAt(currentPosition, in: input)
+            if rowStatus.isEqual || rowStatus.hasMoreOnes {
+                return value == "1"
+            } else {
+                return value == "0"
+            }
+        })
+
+        let co2Binary = searchForValidEvents(from: inputs, currentPosition: 0, matches: { input, rowStatus, currentPosition in
+            let value = stringAt(currentPosition, in: input)
+            if rowStatus.isEqual || rowStatus.hasMoreZeros {
+                return value == "0"
+            } else {
+                return value == "1"
+            }
+        })
+
+        guard let oxygen = Int(oxygenBinary, radix: 2), let co2 = Int(co2Binary, radix: 2) else {
+            struct InvalidBinaryStringsError: Error {}
+            throw InvalidBinaryStringsError()
+        }
+
+        return "\(oxygen * co2)"
     }
 
-    private static func calculateGamma(from positions: [Dictionary<Int, Int>.Element], inputCount: Int) -> String {
-        positions.map { $0.value > (inputCount / 2) ? "1" : "0" }.joined()
+    private static func searchForValidEvents(from inputs: [DayInput], currentPosition: Int, matches: (DayInput, RowStatus, Int) -> Bool) -> DayInput {
+        let currentRowStatus = createRowStatus(across: inputs, for: currentPosition)
+        let validMatches = inputs.filter { matches($0, currentRowStatus, currentPosition) }
+        if validMatches.count == 1 {
+            return validMatches[0]
+        } else {
+            return searchForValidEvents(from: validMatches, currentPosition: currentPosition + 1, matches: matches)
+        }
     }
 
-    private static func calculateEpsilon(from positions: [Dictionary<Int, Int>.Element], inputCount: Int) -> String {
-        positions.map { $0.value > (inputCount / 2) ? "0" : "1" }.joined()
+    private static func createRowStatuses(from inputs: [DayInput]) -> [RowStatus] {
+        guard let length = inputs.first?.count else { return [] }
+        return (0..<length).map { createRowStatus(across: inputs, for: $0) }
+    }
+
+    private static func createRowStatus(across inputs: [DayInput], for position: Int) -> RowStatus {
+        var result = RowStatus()
+        for input in inputs {
+            if stringAt(position, in: input) == "0" {
+                result.zeros += 1
+            } else {
+                result.ones += 1
+            }
+        }
+
+        return result
+    }
+
+    private static func stringAt(_ pos: Int, in str: String) -> String {
+        let index = str.index(str.startIndex, offsetBy: pos)
+        return String(str[index])
     }
 }
 
