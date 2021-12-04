@@ -4,10 +4,28 @@ import Parsing
 // MARK: Solution
 public struct Day4: AdventOfCodeDay {
     public struct Board: Equatable {
-        public var rows: [[Int]]
+        public struct Space: Equatable {
+            public var value: Int
+            public var isMarked: Bool
 
-        public init(rows: [[Int]]) {
+            public init(value: Int, isMarked: Bool = false) {
+                self.value = value
+                self.isMarked = isMarked
+            }
+        }
+
+        public var rows: [[Space]]
+
+        public init(rows: [[Space]]) {
             self.rows = rows
+        }
+
+        public mutating func mark(num: Int) {
+            for rowIdx in 0..<rows.count {
+                for colIdx in 0 ..< rows[rowIdx].count where rows[rowIdx][colIdx].value == num {
+                    rows[rowIdx][colIdx].isMarked = true
+                }
+            }
         }
     }
 
@@ -37,6 +55,12 @@ public struct Day4: AdventOfCodeDay {
     }
 }
 
+extension Day4.Board.Space: ExpressibleByIntegerLiteral {
+    public init(integerLiteral value: Int) {
+        self.init(value: value, isMarked: false)
+    }
+}
+
 // MARK: Parser
 extension Day4 {
     public static let numbersParser = Many(Int.parser(), separator: ",")
@@ -45,6 +69,7 @@ extension Day4 {
         .take(Int.parser())
 
     public static let bingoRow = Many(bingoNumber, atMost: 5, separator: " ")
+        .map { $0.map { Board.Space.init(value: $0) } }
     public static let bingoCard = Many(bingoRow, atMost: 5, separator: "\n")
         .map { Board(rows: $0) }
     public static let bingos = Many(bingoCard, separator: "\n")
