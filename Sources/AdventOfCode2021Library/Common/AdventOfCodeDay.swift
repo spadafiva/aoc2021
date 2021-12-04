@@ -5,7 +5,7 @@
 import Foundation
 import Parsing
 
-public enum ParsingError: Error {
+enum ParsingError: Error {
     case noFile
     case invalidContents(file: URL)
     case cannotParse(String)
