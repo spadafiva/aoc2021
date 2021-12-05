@@ -61,38 +61,58 @@ public struct Day4: AdventOfCodeDay {
 
     static func part1(inputs: [DayInput], configuration: PartOnlyConfiguration) throws -> String {
         var input = inputs[0]
+        let (boardIdx, position) = try findWinningBoard(input: &input)
+        let winningNumber = input.numbers[position]
+        let result = calculateScore(winningNumber: winningNumber, board: input.boards[boardIdx])
+        return "\(result)"
+    }
+
+    static func part2(inputs: [DayInput], configuration: PartOnlyConfiguration) throws -> String {
+        var remaining = inputs[0]
+
+        while remaining.boards.count > 1 {
+            var input = remaining
+            let nextWinner = try findWinningBoard(input: &input)
+            remaining.boards.remove(at: nextWinner.boardNumber)
+        }
+
+        let winnerInfo = try findWinningBoard(input: &remaining)
+        let result = calculateScore(winningNumber: remaining.numbers[winnerInfo.position], board: remaining.boards[0])
+        return "\(result)"
+    }
+
+    private static func findWinningBoard(input: inout DayInput) throws -> (boardNumber: Int, position: Int) {
         var position = 0
 
         while position < input.numbers.count {
-            if let winnerDetails = checkForWinner(position: position, input: &input) {
-                let (board, winningNumber) = winnerDetails
-                var total = 0
-                for row in board.rows {
-                    for space in row {
-                        if !space.isMarked {
-                            total += space.value
-                        }
-                    }
-                }
-                return "\(total * winningNumber)"
+            if let board = checkForWinner(position: position, input: &input) {
+                return (board, position)
             }
             position += 1
         }
 
-        return "blah"
-
+        struct InvalidInputError: Error {}
+        throw InvalidInputError()
     }
 
-    static func part2(inputs: [DayInput], configuration: PartOnlyConfiguration) throws -> String {
-        ""
+    private static func calculateScore(winningNumber: Int, board: Board) -> Int {
+        var total = 0
+        for row in board.rows {
+            for space in row {
+                if !space.isMarked {
+                    total += space.value
+                }
+            }
+        }
+        return winningNumber * total
     }
 
-    private static func checkForWinner(position: Int, input: inout DayInput) -> (Board, Int)? {
+    private static func checkForWinner(position: Int, input: inout DayInput) -> Int? {
         let markNumber = input.numbers[position]
         for boardIdx in 0..<input.boards.count {
             input.boards[boardIdx].mark(num: markNumber)
             if input.boards[boardIdx].isWinner() {
-                return (input.boards[boardIdx], markNumber)
+                return boardIdx
             }
         }
         return nil

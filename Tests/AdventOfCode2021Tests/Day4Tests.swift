@@ -47,9 +47,9 @@ final class Day4Tests: XCTestCase {
         try XCTAssertEqual(Day4.run(configuration: .part1, with: .rawInput(.sample)), "4512")
     }
 
-//    func testPassesSampleCasePart2() throws {
-//        try XCTAssertEqual(Day4.run(configuration: .part2, with: .rawInput(.sample)), "230")
-//    }
+    func testPassesSampleCasePart2() throws {
+        try XCTAssertEqual(Day4.run(configuration: .part2, with: .rawInput(.sample)), "1924")
+    }
 }
 
 private extension Day4.DayInput {
