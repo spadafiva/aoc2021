@@ -19,6 +19,7 @@ final class Day3Tests: XCTestCase {
             """
         )
     }
+
     func testPassesSampleCasePart1() throws {
         try XCTAssertEqual(Day3.run(configuration: .part1, with: .rawInput(.sample)), "198")
     }

@@ -22,6 +22,34 @@ final class Day4Tests: XCTestCase {
         ])
         )
     }
+
+    func testNotWinner() {
+        let board = Day4.DayInput.sample.boards[0]
+        XCTAssertFalse(board.isWinner())
+    }
+
+    func testWinners() {
+        let winningRows = Day4.DayInput.sample.boards[0].rows.map { $0.map(\.value) }
+        let winningCols = (0...4).map { col in
+            Day4.DayInput.sample.boards[0].rows.map { $0[col] }
+        }.map { $0.map(\.value) }
+        let winningNumberSets = winningRows + winningCols
+
+        for winningNumbers in winningNumberSets {
+            var board = Day4.DayInput.sample.boards[0]
+
+            winningNumbers.forEach { board.mark(num: $0) }
+            XCTAssertTrue(board.isWinner())
+        }
+    }
+
+    func testPassesSampleCasePart1() throws {
+        try XCTAssertEqual(Day4.run(configuration: .part1, with: .rawInput(.sample)), "4512")
+    }
+
+//    func testPassesSampleCasePart2() throws {
+//        try XCTAssertEqual(Day4.run(configuration: .part2, with: .rawInput(.sample)), "230")
+//    }
 }
 
 private extension Day4.DayInput {
