@@ -12,9 +12,9 @@ final class Day5Tests: XCTestCase {
         try XCTAssertEqual(Day5.run(configuration: .part1, with: .rawInput(.sample)), "5")
     }
 
-//    func testPassesSampleCasePart2() throws {
-//        try XCTAssertEqual(Day4.run(configuration: .part2, with: .rawInput(.sample)), "1924")
-//    }
+    func testPassesSampleCasePart2() throws {
+        try XCTAssertEqual(Day5.run(configuration: .part2, with: .rawInput(.sample)), "12")
+    }
 }
 
 private extension String {
