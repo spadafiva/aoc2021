@@ -8,8 +8,15 @@ final class Day6Tests: XCTestCase {
     }
 
     func testGrowsCorrectly() {
-        try XCTAssertEqual(Day6.run(configuration: .init(iterations: 1), with: .rawInput(.sample)), "5")
-        try XCTAssertEqual(Day6.run(configuration: .init(iterations: 2), with: .rawInput(.sample)), "6")
+        try XCTAssertEqual(Day6.run(configuration: 1, with: .rawInput(.sample)), "5")
+
+        try XCTAssertEqual(Day6.run(configuration: 2, with: .rawInput(.sample)), "6")
+
+        try XCTAssertEqual(Day6.run(configuration: 3, with: .rawInput(.sample)), "7")
+
+        try XCTAssertEqual(Day6.run(configuration: 4, with: .rawInput(.sample)), "9")
+
+        try XCTAssertEqual(Day6.run(configuration: 5, with: .rawInput(.sample)), "10")
     }
 
     func testPassesSampleCasePart1() throws {
@@ -17,9 +24,9 @@ final class Day6Tests: XCTestCase {
         try XCTAssertEqual(Day6.run(configuration: .init(iterations: 80), with: .rawInput(.sample)), "5934")
     }
 
-//    func testPassesSampleCasePart2() throws {
-//        try XCTAssertEqual(Day6.run(configuration: .part2, with: .rawInput(.sample)), "345387")
-//    }
+    func testPassesSampleCasePart2() throws {
+        try XCTAssertEqual(Day6.run(configuration: .part2, with: .rawInput(.sample)), "26984457539")
+    }
 }
 
 private extension String {
