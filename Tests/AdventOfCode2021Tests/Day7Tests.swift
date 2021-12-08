@@ -7,7 +7,7 @@ final class Day7Tests: XCTestCase {
     }
 
     func testPassesSampleCasePart2() throws {
-//        try XCTAssertEqual(Day6.run(configuration: .part2, with: .rawInput(.sample)), "26984457539")
+      try XCTAssertEqual(Day7.run(configuration: .part2, with: .rawInput(.sample)), "168")
     }
 }
 
