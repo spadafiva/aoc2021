@@ -3,7 +3,7 @@ import Parsing
 
 // MARK: Solution
 public struct Day1: AdventOfCodeDay {
-    public static func result(inputs: [Int], configuration: Configuration) throws -> String {
+    public static func result(input inputs: [Int], configuration: Configuration) throws -> String {
         var previous: Int? = nil
         var increases = 0
 
@@ -31,7 +31,7 @@ public struct Day1: AdventOfCodeDay {
 
 // MARK: Parser
 extension Day1 {
-    public static let parser = Int.parser()
+    public static let parseInput = DayInputParser.multiline(Int.parser())
 }
 
 // MARK: Configuration

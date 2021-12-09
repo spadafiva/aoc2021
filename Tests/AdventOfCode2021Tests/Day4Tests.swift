@@ -4,7 +4,7 @@ import AdventOfCode2021Library
 final class Day4Tests: XCTestCase {
     func testDayInputParser() throws {
         let input = String.sample
-        let result = Day4.parser.parse(input)
+        let result = Day4.parseInput(input)
         let dayInput = try XCTUnwrap(result)
 
         XCTAssertEqual(dayInput, .sample)

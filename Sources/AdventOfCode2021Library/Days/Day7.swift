@@ -3,16 +3,11 @@ import Parsing
 
 public struct Day7: AdventOfCodeDay {
 
-    // MARK: Input
-    public typealias DayInput = [Int]
-
     // MARK: Parser
-    public static let parser = Many(Int.parser(), separator: ",")
-        .eraseToAnyParser()
+    public static let parseInput = DayInputParser.single(Many(Int.parser(), separator: ","))
 
     // MARK: Solution
-    public static func result(inputs: [DayInput], configuration: PartOnlyConfiguration) throws -> String {
-        let input = inputs[0]
+    public static func result(input: [Int], configuration: PartOnlyConfiguration) throws -> String {
         var minValue = input[0]
         var maxValue = input[0]
         for value in input {

@@ -22,13 +22,12 @@ public struct Day6: AdventOfCodeDay {
     public typealias DayInput = [Int]
 
     // MARK: Parser
-    public static let parser = Many(Int.parser(), separator: ",")
-        .eraseToAnyParser()
+    public static let parseInput = DayInputParser.single(Many(Int.parser(), separator: ","))
 
     // MARK: Solution
-    public static func result(inputs: [DayInput], configuration: Configuration) throws -> String {
+    public static func result(input: [Int], configuration: Configuration) throws -> String {
         var cache: [FishStepCacheHit: Int] = [:]
-        let result = inputs[0].reduce(0, { $0 + calculate(fish: $1, steps: configuration.iterations, cache: &cache) })
+        let result = input.reduce(0, { $0 + calculate(fish: $1, steps: configuration.iterations, cache: &cache) })
         return "\(result)"
     }
 

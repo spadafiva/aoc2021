@@ -52,23 +52,23 @@ public struct Day4: AdventOfCodeDay {
         }
     }
 
-    public static func result(inputs: [DayInput], configuration: PartOnlyConfiguration) throws -> String {
+    public static func result(input: DayInput, configuration: PartOnlyConfiguration) throws -> String {
         switch configuration {
-        case .part1: return try part1(inputs: inputs, configuration: configuration)
-        case .part2: return try part2(inputs: inputs, configuration: configuration)
+        case .part1: return try part1(input: input, configuration: configuration)
+        case .part2: return try part2(input: input, configuration: configuration)
         }
     }
 
-    static func part1(inputs: [DayInput], configuration: PartOnlyConfiguration) throws -> String {
-        var input = inputs[0]
+    static func part1(input initialInput: DayInput, configuration: PartOnlyConfiguration) throws -> String {
+        var input = initialInput
         let (boardIdx, position) = try findWinningBoard(input: &input)
         let winningNumber = input.numbers[position]
         let result = calculateScore(winningNumber: winningNumber, board: input.boards[boardIdx])
         return "\(result)"
     }
 
-    static func part2(inputs: [DayInput], configuration: PartOnlyConfiguration) throws -> String {
-        var remaining = inputs[0]
+    static func part2(input: DayInput, configuration: PartOnlyConfiguration) throws -> String {
+        var remaining = input
 
         while remaining.boards.count > 1 {
             var input = remaining
@@ -138,11 +138,13 @@ extension Day4 {
         .map { Board(rows: $0) }
     public static let bingos = Many(bingoCard, separator: "\n")
 
-    public static let parser = numbersParser
+    public static let parseInput = DayInputParser.single(
+        numbersParser
         .skip("\n")
         .take(bingos)
         .map(DayInput.init)
         .eraseToAnyParser()
+    )
 }
 
 // MARK: Configuration

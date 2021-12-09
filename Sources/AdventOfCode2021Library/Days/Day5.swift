@@ -6,7 +6,7 @@ public struct Day5: AdventOfCodeDay {
     public typealias Configuration = PartOnlyConfiguration
 
     // MARK: Input
-    public struct DayInput: Equatable {
+    public struct VentLine: Equatable {
         public init(start: Point, end: Point) {
             self.start = start
             self.end = end
@@ -17,13 +17,15 @@ public struct Day5: AdventOfCodeDay {
     }
 
     // MARK: Parser
-    public static let parser = Point.commaParser
-        .skip(" -> ")
-        .take(Point.commaParser)
-        .map(DayInput.init)
+    public static let parseInput = DayInputParser.multiline(
+        Point.commaParser
+            .skip(" -> ")
+            .take(Point.commaParser)
+            .map(VentLine.init)
+    )
 
     // MARK: Solution
-    public static func result(inputs: [DayInput], configuration: PartOnlyConfiguration) throws -> String {
+    public static func result(input: [VentLine], configuration: PartOnlyConfiguration) throws -> String {
 
         var heatMap: [Point: Int] = [:]
 
@@ -32,17 +34,17 @@ public struct Day5: AdventOfCodeDay {
             heatMap[point] = value + 1
         }
 
-        for input in inputs {
-            if input.start.x == input.end.x {
-                for point in linePoints(a: input.start, b: input.end, along: \.x) {
+        for ventLine in input {
+            if ventLine.start.x == ventLine.end.x {
+                for point in linePoints(a: ventLine.start, b: ventLine.end, along: \.x) {
                     count(point: point)
                 }
-            } else if input.start.y == input.end.y {
-                for point in linePoints(a: input.start, b: input.end, along: \.y) {
+            } else if ventLine.start.y == ventLine.end.y {
+                for point in linePoints(a: ventLine.start, b: ventLine.end, along: \.y) {
                     count(point: point)
                 }
             } else if configuration == .part2 {
-                for point in diagonalPoints(a: input.start, b: input.end) {
+                for point in diagonalPoints(a: ventLine.start, b: ventLine.end) {
                     count(point: point)
                 }
             }

@@ -4,7 +4,7 @@ import AdventOfCode2021Library
 final class Day6Tests: XCTestCase {
     func testParsesCorrectly() throws {
         let parsedData = try XCTUnwrap(Day6.valuesFor(rawString: .sample))
-        XCTAssertEqual(parsedData.first, [3, 4, 3, 1, 2])
+        XCTAssertEqual(parsedData, [3, 4, 3, 1, 2])
     }
 
     func testGrowsCorrectly() {

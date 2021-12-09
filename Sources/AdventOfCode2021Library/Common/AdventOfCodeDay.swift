@@ -18,35 +18,32 @@ public protocol DayConfiguration {
 
 public protocol AdventOfCodeDay {
     associatedtype DayInput
-    associatedtype DayInputParser: Parser where DayInputParser.Input == Substring, DayInputParser.Output == DayInput
     associatedtype Configuration: DayConfiguration
 
-    static var parser: DayInputParser { get }
-    static var separator: String { get }
+    static var parseInput: (String) -> DayInput? { get }
 
-    static func result(inputs: [DayInput], configuration: Configuration) throws -> String
+    static func result(input: DayInput, configuration: Configuration) throws -> String
+}
+
+enum DayInputParser {
+    static func single<DayInputParser: Parser>(_ parser: DayInputParser) -> (String) -> DayInputParser.Output? where DayInputParser.Input == Substring {
+        { parser.parse(Substring($0)) }
+    }
+
+    static func multiline<DayInputParser: Parser>(_ parser: DayInputParser,  separator: String = "\n") -> (String) -> [DayInputParser.Output]? where DayInputParser.Input == Substring {
+        { Many(parser, separator: separator).parse(Substring($0)) }
+    }
 }
 
 extension AdventOfCodeDay {
-    public static var separator: String { "\n" }
-
-    public static func valuesFor(rawString: String) throws -> [DayInput] {
-        let lineParser = Many(Self.parser, separator: separator)
-
-        guard let result = lineParser.parse(Substring(rawString)).output else {
+    public static func valuesFor(rawString: String) throws -> DayInput {
+        guard let results = parseInput(rawString) else {
             throw ParsingError.cannotParse(rawString)
         }
-
-        let compacted = result.compactMap { $0 }
-
-        guard compacted.count == result.count else {
-            throw ParsingError.cannotParse(rawString)
-        }
-
-        return compacted
+        return results
     }
 
-    static func valuesFor(inputsFile fileName: String) throws -> [DayInput] {
+    static func valuesFor(inputsFile fileName: String) throws -> DayInput {
         guard let url = Bundle.module.url(forResource: fileName, withExtension: "txt") else {
             throw ParsingError.noFile
         }
@@ -60,18 +57,18 @@ extension AdventOfCodeDay {
 
 public extension AdventOfCodeDay {
     static func run(configuration: Configuration, with inputSource: AdventOfCodeInputSource<DayInput>) throws -> String {
-        let values: [DayInput]
+        let input: DayInput
 
         switch inputSource {
-        case let .values(inputValues):
-            values = inputValues
+        case let .value(inputValue):
+            input = inputValue
         case let .fileName(fileName):
-            values = try valuesFor(inputsFile: fileName)
+            input = try valuesFor(inputsFile: fileName)
         case let .rawInput(rawInput):
-            values = try valuesFor(rawString: rawInput)
+            input = try valuesFor(rawString: rawInput)
         }
 
-        return try result(inputs: values, configuration: configuration)
+        return try result(input: input, configuration: configuration)
     }
 }
 
@@ -81,7 +78,7 @@ public enum PartOnlyConfiguration: DayConfiguration {
 }
 
 public enum AdventOfCodeInputSource<T> {
-    case values([T])
+    case value(T)
     case rawInput(String)
     case fileName(String)
 }

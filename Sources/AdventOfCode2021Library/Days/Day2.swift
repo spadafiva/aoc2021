@@ -13,10 +13,10 @@ public struct Day2: AdventOfCodeDay {
         }
     }
 
-    public static func result(inputs: [Command], configuration: PartOnlyConfiguration) throws -> String {
+    public static func result(input: [Command], configuration: PartOnlyConfiguration) throws -> String {
         switch configuration {
-        case .part1: return try part1(inputs: inputs, configuration: configuration)
-        case .part2: return try part2(inputs: inputs, configuration: configuration)
+        case .part1: return try part1(inputs: input, configuration: configuration)
+        case .part2: return try part2(inputs: input, configuration: configuration)
         }
     }
 
@@ -65,10 +65,12 @@ public struct Day2: AdventOfCodeDay {
 
 // MARK: Parser
 extension Day2 {
-    public static let parser = Direction.parser
-        .skip(" ")
-        .take(Int.parser())
-        .map(Command.init)
+    public static let parseInput = DayInputParser.multiline(
+        Direction.parser
+            .skip(" ")
+            .take(Int.parser())
+            .map(Command.init)
+    )
 }
 
 // MARK: Configuration
