@@ -28,3 +28,11 @@ extension Point {
         .eraseToAnyParser()
 }
 
+extension Point {
+    var adjacentPoints: [Point] {[
+        Point(x: x - 1, y: y),
+        Point(x: x + 1, y: y),
+        Point(x: x, y: y - 1),
+        Point(x: x, y: y + 1)
+    ]}
+}
