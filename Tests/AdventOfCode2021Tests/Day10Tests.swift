@@ -5,10 +5,10 @@ final class Day10Tests: XCTestCase {
     func testPassesSampleCasePart1() throws {
         try XCTAssertEqual(Day10.run(configuration: .part1, with: .rawInput(.sample)), "26397")
     }
-//
-//    func testPassesSampleCasePart2() throws {
-//      try XCTAssertEqual(Day7.run(configuration: .part2, with: .rawInput(.sample)), "168")
-//    }
+
+    func testPassesSampleCasePart2() throws {
+      try XCTAssertEqual(Day10.run(configuration: .part2, with: .rawInput(.sample)), "288957")
+    }
 }
 
 private extension String {
