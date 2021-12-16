@@ -1,3 +1,3 @@
 import AdventOfCode2021Library
 
-try print(Day9.run(configuration: .part2, with: .fileName("day9")))
+try print(Day10.run(configuration: .part1, with: .fileName("day10")))

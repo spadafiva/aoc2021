@@ -1,22 +1,16 @@
 import XCTest
 import AdventOfCode2021Library
 
-final class Day9Tests: XCTestCase {
+final class Day7Tests: XCTestCase {
     func testPassesSampleCasePart1() throws {
-        try XCTAssertEqual(Day9.run(configuration: .part1, with: .rawInput(.sample)), "15")
+        try XCTAssertEqual(Day7.run(configuration: .part1, with: .rawInput(.sample)), "37")
     }
 
     func testPassesSampleCasePart2() throws {
-      try XCTAssertEqual(Day9.run(configuration: .part2, with: .rawInput(.sample)), "1134")
+      try XCTAssertEqual(Day7.run(configuration: .part2, with: .rawInput(.sample)), "168")
     }
 }
 
 private extension String {
-    static let sample = """
-    2199943210
-    3987894921
-    9856789892
-    8767896789
-    9899965678
-    """
+    static let sample = "16,1,2,0,4,2,7,1,2,14"
 }
